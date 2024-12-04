@@ -1,29 +1,51 @@
 import React, { useState } from 'react'
 import {
     MenuFoldOutlined,
+    MenuOutlined,
     MenuUnfoldOutlined,
 } from '@ant-design/icons';
-import { Button, Menu } from 'antd';
-const Navbar = () => {
-    const [collapsed, setCollapsed] = useState(false)
+import { Avatar, Button } from 'antd';
+import { Input } from 'antd';
+const { Search } = Input;
+const Navbar = ({ collapsed, setCollapsed }) => {
+    // const [collapsed, setCollapsed] = useState(false)
 
     const toggleCollapsed = () => {
         setCollapsed(!collapsed)
     }
 
     return (
-        <div className='border-2 border-red-500'>
-            <Button
-                type="primary"
-                onClick={toggleCollapsed}
-                style={{
-                    marginBottom: 16,
-                }}
-            >
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            </Button>
+        <div className='flex items-center  w-full'>
 
-            <img src="/images/youtubeLogoDark.jpg" alt="Youtube Logo" width={200} />
+            <div className='flex items-center  w-1/3'>
+                <Button
+                    className='!bg-transparent rounded-full w-12 h-12 border-none  hover:!bg-gray-600'
+                    onClick={toggleCollapsed}
+                    style={{
+
+                    }}
+                >
+                    <MenuOutlined style={{
+                        color: "aliceblue"
+                    }} />
+                </Button>
+
+                <img src="/images/youtubeLogoDark.jpg" alt="Youtube Logo" width={200} />
+            </div>
+
+            <Search
+                placeholder="input search text"
+                className='header-searchBar w-1/3 '
+                onSearch={() => {
+
+                }}
+
+            />
+
+            <div className='w-1/3 text-right'>
+                <Avatar icon={"A"} className='bg-white text-black' />
+            </div>
+
         </div>
     )
 }
