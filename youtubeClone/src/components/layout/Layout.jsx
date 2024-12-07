@@ -24,7 +24,7 @@ const Layout = () => {
             label: 'Subscriptions',
         },
         {
-            key: '3',
+            key: '4',
             icon: <FireOutlined />,
             label: 'Explore',
             children: [
@@ -42,7 +42,7 @@ const Layout = () => {
                 },
                 {
                     key: '8',
-                    label: 'Gaminf',
+                    label: 'Game Info',
                 },
             ],
         },

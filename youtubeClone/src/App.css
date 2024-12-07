@@ -24,3 +24,25 @@ body {
   > .ant-btn-icon {
   color: aliceblue;
 }
+
+/* ant modal  */
+
+.ant-modal-content {
+  background: #0f0f0f !important;
+  border: 1px solid white !important;
+}
+
+.ant-modal-header {
+  background: transparent !important;
+  color: white !important;
+}
+
+.ant-modal-header > .ant-modal-title {
+  color: white !important;
+}
+
+/* custom input  */
+
+.customInput > input::placeholder {
+  color: white !important;
+}
