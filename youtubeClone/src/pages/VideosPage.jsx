@@ -142,7 +142,7 @@ const VideosPage = () => {
           </div>
           <div className="space-y-4">
             {comments.map((comment) => (
-              <div key={comment.id} className="bg-gray-900 p-3 rounded-md">
+              <div key={comment.id} className="bg-[#FFFFFF1A] p-3 rounded-md">
                 <p className="font-bold">{comment.name}</p>
                 <p className="text-sm text-gray-400">{comment.timestamp}</p>
                 <p>{comment.text}</p>
@@ -157,7 +157,10 @@ const VideosPage = () => {
         <h2 className="text-xl font-semibold mb-4">Suggested Videos</h2>
         <div className="space-y-4">
           {suggestedVideos.map((video) => (
-            <div key={video.id} className="flex space-x-4 items-center">
+            <div
+              key={video.id}
+              className="flex space-x-4 items-center bg-[#FFFFFF1A]"
+            >
               <img
                 className="w-24 h-16 rounded-md object-cover"
                 src={video.thumbnail}
