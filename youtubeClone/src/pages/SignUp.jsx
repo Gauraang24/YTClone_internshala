@@ -4,7 +4,7 @@ import CustomInput from "../components/CustomComponent/CustomInput";
 import CustomButton from "../components/CustomComponent/CustomButton";
 import { REGEX_FOR_EMAIL, REGEX_FOR_NAME, REGEX_FOR_PASSWORD } from "../utils/constants";
 import { useEffect } from "react";
-import CustomModal from "../components/CustomComponent/CustomModal";
+import { useNavigate } from "react-router-dom";
 
 const formData = [
     {
@@ -53,7 +53,8 @@ const getValidationRules = (name, label) => {
     };
 };
 
-const SignUp = ({ close, setIsLogin, open, isLogin }) => {
+const SignUp = () => {
+    const navigate = useNavigate()
     const { handleSubmit, control, formState: { errors }, getValues, reset } = useForm({
         mode: "onChange",
         reValidateMode: "onChange",
@@ -63,34 +64,20 @@ const SignUp = ({ close, setIsLogin, open, isLogin }) => {
             password: "",
         },
     });
-    useEffect(() => {
-        if (open) {
-            console.log("reset called")
-            reset({
-                name: "",
-                email: "",
-                password: ""
-            })
-        }
-    }, [open])
     const submit = (data) => {
         console.log("Form Data:", data);
     };
 
     return (
-        <CustomModal
-            open={open}
-            title={<p>{isLogin ? "Login In" : "Create Account"}</p>}
-            onCancel={() => {
-                close(false);
-            }}
-            onOk={() => {
-                close(false);
-            }}
-            className={""}
-            footer={() => <></>}
-        >
-            <div className="h-auto w-full">
+
+        <div className="h-screen w-screen flex justify-center items-center">
+
+            <div className="w-[40%] border p-5 rounded-3xl">
+                <div className='mx-auto'>
+
+                    <img src="/images/youtubeLogoDark.jpg" className='mx-auto' width={300} alt="" />
+                </div>
+
                 <form onSubmit={handleSubmit(submit)} className="h-auto w-full">
                     {formData.map((i, index) => (
                         <div key={index} className="mt-4">
@@ -125,19 +112,14 @@ const SignUp = ({ close, setIsLogin, open, isLogin }) => {
                         Already have an account?{" "}
                         <span
                             className="text-blue-600 cursor-pointer"
-                            onClick={() => setIsLogin(true)}
+                            onClick={() => {
+                                navigate("/login")
+                            }}
                         >
                             Try to Log In
                         </span>
                     </p>
                     <div className="flex gap-5 w-full justify-end mt-5">
-                        <CustomButton
-                            title={"Cancel"}
-                            color="default"
-                            variant="outlined"
-                            className={"m-2 !bg-transparent text-white"}
-                            onClick={() => close(false)}
-                        />
                         <CustomButton
                             title={"Submit"}
                             color="danger"
@@ -148,7 +130,7 @@ const SignUp = ({ close, setIsLogin, open, isLogin }) => {
                     </div>
                 </form>
             </div>
-        </CustomModal>
+        </div>
 
     );
 };

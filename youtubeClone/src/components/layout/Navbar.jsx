@@ -1,19 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { MenuOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar } from "antd";
 import { Input } from "antd";
-import CustomModal from "../CustomComponent/CustomModal";
-import SignUp from "../../pages/SignUp";
 import CustomButton from "../CustomComponent/CustomButton";
-import LogIn from "../../pages/LogIn";
+import { useNavigate } from "react-router-dom";
 const { Search } = Input;
 const Navbar = ({ collapsed, setCollapsed }) => {
-    const [openModal, setOpenModal] = useState(false);
-    const [isLogin, setIsLogin] = useState(false);
-
     const toggleCollapsed = () => {
         setCollapsed(!collapsed);
     };
+    const navigate = useNavigate()
 
     return (
         <div className="flex items-center  w-full">
@@ -46,30 +42,11 @@ const Navbar = ({ collapsed, setCollapsed }) => {
                     icon={<UserOutlined />}
                     className="text-white !bg-transparent rounded-full"
                     onClick={() => {
-                        setOpenModal(true);
+                        navigate("/login")
                     }}
-                    title={"Sign Up"}
+                    title={"Login"}
                 />
             </div>
-
-            {/* <CustomModal
-                open={openModal}
-                title={<p>{isLogin ? "Login In" : "Create Account"}</p>}
-                onCancel={() => {
-                    setOpenModal(false);
-                }}
-                onOk={() => {
-                    setOpenModal(false);
-                }}
-                className={""}
-                footer={() => <></>}
-            > */}
-            {isLogin ? (
-                <LogIn close={setOpenModal} setIsLogin={setIsLogin} isLogin={isLogin} open={openModal} />
-            ) : (
-                <SignUp close={setOpenModal} setIsLogin={setIsLogin} isLogin={isLogin} open={openModal} />
-            )}
-            {/* </CustomModal> */}
         </div>
     );
 };

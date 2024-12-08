@@ -3,7 +3,7 @@ import { Controller, useForm } from 'react-hook-form';
 import CustomInput from '../components/CustomComponent/CustomInput';
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import CustomButton from '../components/CustomComponent/CustomButton';
-import CustomModal from '../components/CustomComponent/CustomModal';
+import { useNavigate } from 'react-router-dom';
 
 const fields = [{
     label: "Email",
@@ -16,26 +16,21 @@ const fields = [{
     placeholder: "Create a password",
     icons: <LockOutlined />,
 }]
-const LogIn = ({ close, setIsLogin, open, isLogin }) => {
+const LogIn = () => {
     const { handleSubmit, control } = useForm();
+    const navigate = useNavigate()
 
     const submit = () => {
         console.log("Submit");
     };
     return (
-        <CustomModal
-            open={open}
-            title={<p>{isLogin ? "Login In" : "Create Account"}</p>}
-            onCancel={() => {
-                close(false);
-            }}
-            onOk={() => {
-                close(false);
-            }}
-            className={""}
-            footer={() => <></>}
-        >
-            <div>
+        <div className='w-screen h-screen flex justify-center items-center'>
+
+            <div className='w-[40%] border p-5 rounded-3xl'>
+                <div className='mx-auto'>
+
+                    <img src="/images/youtubeLogoDark.jpg" className='mx-auto' width={300} alt="" />
+                </div>
                 <form onSubmit={handleSubmit(submit)} className="h-auto w-full">
                     {fields.map((i) => {
                         return (
@@ -72,7 +67,8 @@ const LogIn = ({ close, setIsLogin, open, isLogin }) => {
                     <span
                         className="text-blue-600 cursor-pointer"
                         onClick={() => {
-                            setIsLogin(false);
+                            navigate("/signUp")
+
                         }}
                     >
                         Sign Up
@@ -81,26 +77,17 @@ const LogIn = ({ close, setIsLogin, open, isLogin }) => {
 
                 <div className="flex gap-5 w-full justify-end mt-5">
                     <CustomButton
-                        title={"cancel"}
-                        color="default"
-                        variant="outlined"
-                        className={"m-2 !bg-transparent text-white"}
-                        onClick={() => {
-                            close(false);
-                        }}
-                    />
-                    <CustomButton
                         title={"Submit"}
                         color="danger"
                         variant="solid"
                         className={"m-2"}
                         onClick={() => {
-                            close(false);
+
                         }}
                     />
                 </div>
             </div>
-        </CustomModal>
+        </div>
 
     )
 }

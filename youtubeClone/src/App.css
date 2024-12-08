@@ -1,27 +1,23 @@
 body {
-  background-color: #0f0f0f;
+  background-color: #000;
 }
 
 /* SearchBar  */
 
-.header-searchBar > .ant-input-wrapper > input {
+.header-searchBar>.ant-input-wrapper>input {
   background: transparent;
   color: aliceblue;
 }
 
-.header-searchBar > .ant-input-wrapper > input::placeholder {
+.header-searchBar>.ant-input-wrapper>input::placeholder {
   color: aliceblue;
 }
 
-.header-searchBar > .ant-input-wrapper > .ant-input-group-addon > button {
+.header-searchBar>.ant-input-wrapper>.ant-input-group-addon>button {
   background: transparent;
 }
 
-.header-searchBar
-  > .ant-input-wrapper
-  > .ant-input-group-addon
-  > button
-  > .ant-btn-icon {
+.header-searchBar>.ant-input-wrapper>.ant-input-group-addon>button>.ant-btn-icon {
   color: aliceblue;
 }
 
@@ -37,12 +33,12 @@ body {
   color: white !important;
 }
 
-.ant-modal-header > .ant-modal-title {
+.ant-modal-header>.ant-modal-title {
   color: white !important;
 }
 
 /* custom input  */
 
-.customInput > input::placeholder {
+.customInput>input::placeholder {
   color: white !important;
 }

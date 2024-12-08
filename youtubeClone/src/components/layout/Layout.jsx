@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import Navbar from './Navbar'
 import { ContainerOutlined, FireOutlined, HomeOutlined, VideoCameraFilled } from '@ant-design/icons'
 import { Menu } from 'antd'
 
 const Layout = () => {
     const [collapsed, setCollapsed] = useState(false)
+    const navigate = useNavigate()
 
     const items = [
         {
@@ -62,7 +63,7 @@ const Layout = () => {
                         inlineCollapsed={collapsed}
                         items={items}
                         onClick={(e) => {
-                            console.log("E onclick", e)
+                            navigate('/')
                         }}
                     />
                 </div>
