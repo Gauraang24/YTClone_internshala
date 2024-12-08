@@ -66,7 +66,7 @@ const Layout = () => {
                         }}
                     />
                 </div>
-                <div className='flex-1 border-red-500 border-2'>
+                <div className='flex-1'>
 
                     <Outlet />
                 </div>
