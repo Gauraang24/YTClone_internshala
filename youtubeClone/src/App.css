@@ -42,3 +42,29 @@ body {
 .customInput>input::placeholder {
   color: white !important;
 }
+
+.ant-menu {
+  background: #00000021 !important;
+}
+
+.ant-menu .ant-menu-sub .ant-menu-inline {
+  background: #000 !important;
+}
+
+.ant-menu-item {
+  background: #ffffff1A !important;
+}
+
+.ant-menu-item-selected {
+  background: #ffffff65 !important;
+
+}
+
+.ant-menu-submenu-open .ant-menu-submenu-selected {
+  background: #ffffff65 !important;
+
+}
+
+.ant-menu-submenu {
+  background: #ffffff1A !important;
+}
