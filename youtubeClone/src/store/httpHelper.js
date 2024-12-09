@@ -1,0 +1,28 @@
+import { axiosInstatnce } from "./axiosInstance";
+
+export const GET_REQUEST = async (url, data) => {
+  try {
+    const response = await axiosInstatnce.get(url, data);
+    return response?.data;
+  } catch (error) {
+    console.log("Error in GET REQUEST ", error);
+  }
+};
+
+export const POST_REQUEST = async (url, data) => {
+  try {
+    const response = await axiosInstatnce.post(url, data);
+    return response?.data;
+  } catch (error) {
+    console.log("Error in POST REQUEST", error);
+  }
+};
+
+export const PUT_REQUEST = async (url, data) => {
+  try {
+    const response = await axiosInstatnce.put(url, data);
+    return response?.data;
+  } catch (error) {
+    console.log("Error in PUT REQUEST", error);
+  }
+};
