@@ -1,8 +1,8 @@
-import { axiosInstatnce } from "./axiosInstance";
+import { axiosInstance } from "./axiosInstance";
 
 export const GET_REQUEST = async (url, data) => {
   try {
-    const response = await axiosInstatnce.get(url, data);
+    const response = await axiosInstance.get(url, data);
     return response?.data;
   } catch (error) {
     console.log("Error in GET REQUEST ", error);
@@ -11,7 +11,7 @@ export const GET_REQUEST = async (url, data) => {
 
 export const POST_REQUEST = async (url, data) => {
   try {
-    const response = await axiosInstatnce.post(url, data);
+    const response = await axiosInstance.post(url, data);
     return response?.data;
   } catch (error) {
     console.log("Error in POST REQUEST", error);
@@ -20,7 +20,7 @@ export const POST_REQUEST = async (url, data) => {
 
 export const PUT_REQUEST = async (url, data) => {
   try {
-    const response = await axiosInstatnce.put(url, data);
+    const response = await axiosInstance.put(url, data);
     return response?.data;
   } catch (error) {
     console.log("Error in PUT REQUEST", error);
