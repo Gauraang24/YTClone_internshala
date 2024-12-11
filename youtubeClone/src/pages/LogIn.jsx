@@ -5,7 +5,7 @@ import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import CustomButton from "../components/CustomComponent/CustomButton";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginApi } from "../store/slices/userSlice";
+import { loginApi, setToken } from "../store/slices/userSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 
 const fields = [
@@ -23,7 +23,19 @@ const fields = [
   },
 ];
 const LogIn = () => {
-  const { handleSubmit, control } = useForm();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    getValues,
+  } = useForm({
+    mode: "onChange",
+    reValidateMode: "onChange",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -40,8 +52,10 @@ const LogIn = () => {
       .then(unwrapResult)
       .then((res) => {
         if (res.status) {
-          console.log("res :", res);
+          console.log("res.token", res.token);
+          dispatch(dispatch(setToken({ token: res.token })));
         } else {
+          console.log("Some error occured");
         }
       });
   };
@@ -66,7 +80,7 @@ const LogIn = () => {
                   rules={{
                     required: true,
                   }}
-                  render={() => {
+                  render={({ field: { onChange } }) => {
                     return (
                       <>
                         <label htmlFor={i?.name} className=" text-white">
@@ -77,8 +91,17 @@ const LogIn = () => {
                           className={"mt-2"}
                           prefix={i?.icons}
                           id={i?.name}
+                          value={getValues(i?.name)}
+                          onChange={(e) => {
+                            onChange(e.target.value);
+                          }}
                           placeholder={i?.placeholder}
                         />
+                        {errors[i?.name] && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors[i?.name].message}
+                          </p>
+                        )}
                       </>
                     );
                   }}
@@ -105,7 +128,7 @@ const LogIn = () => {
             color="danger"
             variant="solid"
             className={"m-2"}
-            onClick={() => {}}
+            onClick={handleSubmit(submit)}
           />
         </div>
       </div>

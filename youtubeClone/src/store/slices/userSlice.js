@@ -12,7 +12,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setToken: (state, action) => {
-      state.token = action.payload;
+      state.token = action.payload?.token;
     },
   },
 });

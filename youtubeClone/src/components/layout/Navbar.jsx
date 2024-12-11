@@ -1,15 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { MenuOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar } from "antd";
+import { Avatar, Dropdown } from "antd";
 import { Input } from "antd";
 import CustomButton from "../CustomComponent/CustomButton";
 import { useNavigate } from "react-router-dom";
 const { Search } = Input;
 const Navbar = ({ collapsed, setCollapsed }) => {
+  const [modal, setModal] = useState(false);
+  const [modalKey, setModalKey] = useState("");
+
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
   const navigate = useNavigate();
+
+  const items = [
+    {
+      key: "1",
+      label: "Create Channel",
+    },
+  ];
+
+  const items2 = [
+    {
+      key: "2",
+      label: "View your Channel",
+    },
+    {
+      key: "3",
+      label: "Upload Videos",
+    },
+  ];
 
   return (
     <div className="flex items-center px-4  w-full">
@@ -36,7 +57,25 @@ const Navbar = ({ collapsed, setCollapsed }) => {
       />
 
       <div className="w-1/3 text-right">
-        <Avatar icon={"A"} className="bg-white text-black" />
+        <Dropdown
+          menu={{
+            items,
+          }}
+        >
+          <a
+            onClick={(e) => {
+              e.preventDefault();
+              if (e.key === "1" || e.key === "3") {
+                setModal(true);
+                setModalKey(e.key);
+              } else if (e.key === "2") {
+                navigate("channel/2");
+              }
+            }}
+          >
+            <Avatar icon={"A"} className="bg-white text-black" />
+          </a>
+        </Dropdown>
         <CustomButton
           color="primary"
           icon={<UserOutlined />}
