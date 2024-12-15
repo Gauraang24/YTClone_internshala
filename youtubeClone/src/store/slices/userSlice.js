@@ -1,12 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { POST_REQUEST } from "../httpHelper";
 import { api } from "../api.js";
-import { login, signup } from "../../utils/endpoints.js";
+import { login, signup, createChannel } from "../../utils/endpoints.js";
 
 const initialState = {};
 
 export const loginApi = api("user/login", POST_REQUEST, login);
 export const signUpApi = api("user/signup", POST_REQUEST, signup);
+
+export const createChannelFunc = api(
+  "user/createChannel",
+  POST_REQUEST,
+  createChannel
+);
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -14,8 +20,14 @@ const userSlice = createSlice({
     setToken: (state, action) => {
       state.token = action.payload?.token;
     },
+    setUserId: (state, action) => {
+      state.userId = action.payload?.userId;
+    },
+    setChannelId: (state, action) => {
+      state.channelId = action.payload?.channelId;
+    },
   },
 });
 
-export const { setToken } = userSlice.actions;
+export const { setToken, setUserId, setChannelId } = userSlice.actions;
 export default userSlice.reducer;

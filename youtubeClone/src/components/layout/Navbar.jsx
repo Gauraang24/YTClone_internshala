@@ -4,8 +4,13 @@ import { Avatar, Dropdown } from "antd";
 import { Input } from "antd";
 import CustomButton from "../CustomComponent/CustomButton";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import NavModal from "./NavModal";
+
 const { Search } = Input;
+
 const Navbar = ({ collapsed, setCollapsed }) => {
+  const selector = useSelector((state) => state.user.user);
   const [modal, setModal] = useState(false);
   const [modalKey, setModalKey] = useState("");
 
@@ -32,8 +37,22 @@ const Navbar = ({ collapsed, setCollapsed }) => {
     },
   ];
 
+  const handleDropDown = (e) => {
+    if (e.key === "1" || e.key === "3") {
+      setModal(true);
+      setModalKey(e.key);
+    } else if (e.key === "2") {
+      navigate("channel/2");
+    }
+  };
+
+  const menu = {
+    items: items,
+    onClick: handleDropDown,
+  };
+
   return (
-    <div className="flex items-center px-4  w-full">
+    <section className="flex items-center px-4  w-full">
       <div className="flex items-center  w-1/3">
         <CustomButton
           title={
@@ -57,36 +76,32 @@ const Navbar = ({ collapsed, setCollapsed }) => {
       />
 
       <div className="w-1/3 text-right">
-        <Dropdown
-          menu={{
-            items,
-          }}
-        >
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              if (e.key === "1" || e.key === "3") {
-                setModal(true);
-                setModalKey(e.key);
-              } else if (e.key === "2") {
-                navigate("channel/2");
-              }
-            }}
-          >
-            <Avatar icon={"A"} className="bg-white text-black" />
-          </a>
-        </Dropdown>
-        <CustomButton
-          color="primary"
-          icon={<UserOutlined />}
-          className="text-white !bg-transparent rounded-full"
-          onClick={() => {
-            navigate("/login");
-          }}
-          title={"Login"}
-        />
+        {selector.token ? (
+          <>
+            <Dropdown menu={menu}>
+              <Avatar
+                icon={"A"}
+                className="bg-white cursor-pointer text-black"
+              />
+            </Dropdown>
+          </>
+        ) : (
+          <>
+            <CustomButton
+              color="primary"
+              icon={<UserOutlined />}
+              className="text-white !bg-transparent rounded-full"
+              onClick={() => {
+                navigate("/login");
+              }}
+              title={"Login"}
+            />
+          </>
+        )}
       </div>
-    </div>
+
+      <NavModal modalKey={modalKey} modal={modal} setModal={setModal} />
+    </section>
   );
 };
 
