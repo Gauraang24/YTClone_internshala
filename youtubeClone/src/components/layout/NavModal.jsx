@@ -14,6 +14,7 @@ const NavModal = ({ modalKey, modal, setModal }) => {
   const dispatch = useDispatch();
   const [imageUrl, setImageUrl] = useState();
   const userId = useSelector((state) => state.user.user.userId);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (modal) {
@@ -77,13 +78,17 @@ const NavModal = ({ modalKey, modal, setModal }) => {
     formData.append("description", values.channelDesc);
     formData.append("userId", userId);
 
+    setLoading(true);
+
     await dispatch(createChannelFunc({ data: formData }))
       .then(unwrapResult)
       .then((result) => {
+        setLoading(false);
         if (result.status) {
-          console.log("Channel Created Successfully");
-          dispatch(test(setChannelId(result.data._id)));
+          dispatch(setChannelId({ channelId: result?.data?._id }));
+          setModal(false);
         } else {
+          setModal(false);
           console.log("Some Error Occured");
         }
       });
@@ -168,10 +173,6 @@ const NavModal = ({ modalKey, modal, setModal }) => {
                         beforeUpload={() => false}
                         onChange={(e) => {
                           handleChange(e);
-                          console.log(
-                            "e.file?.originFileObj :",
-                            e.file?.originFileObj
-                          );
                           onChange(e.file);
                         }}
                       >
@@ -280,6 +281,7 @@ const NavModal = ({ modalKey, modal, setModal }) => {
                   variant="solid"
                   className={"m-2 h-10 w-full"}
                   htmlType="submit"
+                  loading={loading}
                 />
               </div>
             </div>

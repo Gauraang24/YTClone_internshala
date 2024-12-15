@@ -12,6 +12,7 @@ const CustomButton = ({
   type,
   variant,
   htmlType,
+  loading,
 }) => {
   return (
     <div>
@@ -25,6 +26,7 @@ const CustomButton = ({
         color={color}
         variant={variant}
         htmlType={htmlType}
+        loading={loading}
       >
         {title}
       </Button>

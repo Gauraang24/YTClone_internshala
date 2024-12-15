@@ -93,7 +93,11 @@ const SignUp = () => {
       )
         .then(unwrapResult)
         .then((res) => {
-          console.log("Status :", res);
+          if (res.status) {
+            navigate("/login");
+          } else {
+            console.log("Some Error occured", res);
+          }
         });
     } catch (error) {
       console.log("trycatch :", error.message);

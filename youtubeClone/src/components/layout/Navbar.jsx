@@ -42,12 +42,12 @@ const Navbar = ({ collapsed, setCollapsed }) => {
       setModal(true);
       setModalKey(e.key);
     } else if (e.key === "2") {
-      navigate("channel/2");
+      navigate(`channel/${selector?.channelId}`);
     }
   };
 
   const menu = {
-    items: items,
+    items: selector.channelId ? items2 : items,
     onClick: handleDropDown,
   };
 
