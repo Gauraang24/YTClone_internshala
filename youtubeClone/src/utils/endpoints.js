@@ -3,6 +3,7 @@ export const login = "login";
 
 //VIDEOS API
 export const getAllVideos = "videos";
+export const getVideoById = "videos";
 
 //Channel
 export const createChannel = "channel";

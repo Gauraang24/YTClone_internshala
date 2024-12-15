@@ -1,13 +1,37 @@
 import { Avatar } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CustomButton from "../components/CustomComponent/CustomButton";
 import { DislikeOutlined, LikeOutlined } from "@ant-design/icons";
 import CustomInput from "../components/CustomComponent/CustomInput";
+import { getVideosById } from "../store/slices/videoSlice";
+import { useDispatch } from "react-redux";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const VideosPage = () => {
   const param = useParams();
+  const dispatch = useDispatch();
+  const [videoData, setVideoData] = useState({});
 
+  useEffect(() => {
+    getVideosData();
+  }, []);
+
+  const getVideosData = () => {
+    dispatch(
+      getVideosById({
+        param: `/${param.id}`,
+      })
+    )
+      .then(unwrapResult)
+      .then((res) => {
+        if (res.status) {
+          setVideoData(res.data);
+        } else {
+          setVideoData({});
+        }
+      });
+  };
   // Dummy Data
   const suggestedVideos = [
     {

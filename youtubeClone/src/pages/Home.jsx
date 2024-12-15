@@ -118,7 +118,7 @@ const Home = () => {
             <div
               key={i?.videoId}
               onClick={() => {
-                navigate(`/videos/${i?.videoId}`);
+                navigate(`/videos/${i?._id}`);
               }}
             >
               <VideoCard
