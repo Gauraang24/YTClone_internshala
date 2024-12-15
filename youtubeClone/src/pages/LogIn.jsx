@@ -5,7 +5,12 @@ import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import CustomButton from "../components/CustomComponent/CustomButton";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginApi, setToken } from "../store/slices/userSlice";
+import {
+  loginApi,
+  setChannelId,
+  setToken,
+  setUserId,
+} from "../store/slices/userSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 
 const fields = [
@@ -51,11 +56,20 @@ const LogIn = () => {
     )
       .then(unwrapResult)
       .then((res) => {
-        if (res.status) {
-          console.log("res.token", res.token);
-          dispatch(dispatch(setToken({ token: res.token })));
+        if (res?.status) {
+          dispatch(setToken({ token: res?.token }));
+          dispatch(
+            setUserId({
+              userId: res?.data?.userId,
+            })
+          );
+
+          if (res?.data?.channelId) {
+            dispatch(setChannelId({ channelId: res?.data?.channelId }));
+          }
+          navigate("/");
         } else {
-          console.log("Some error occured");
+          console.log("Some error occured", res.message);
         }
       });
   };
