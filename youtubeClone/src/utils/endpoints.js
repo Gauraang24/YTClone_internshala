@@ -6,3 +6,4 @@ export const getAllVideos = "videos";
 
 //Channel
 export const createChannel = "channel";
+export const getChannelInfo = "channel";

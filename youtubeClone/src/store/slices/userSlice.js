@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { POST_REQUEST } from "../httpHelper";
+import { GET_REQUEST, POST_REQUEST } from "../httpHelper";
 import { api } from "../api.js";
-import { login, signup, createChannel } from "../../utils/endpoints.js";
+import {
+  login,
+  signup,
+  createChannel,
+  getChannelInfo,
+} from "../../utils/endpoints.js";
 
 const initialState = {};
 
@@ -13,6 +18,13 @@ export const createChannelFunc = api(
   POST_REQUEST,
   createChannel
 );
+
+export const getChannelApi = api(
+  "user/getChannelByIdApi",
+  GET_REQUEST,
+  getChannelInfo
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,

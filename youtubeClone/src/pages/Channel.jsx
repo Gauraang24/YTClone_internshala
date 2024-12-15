@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getChannelApi } from "../store/slices/userSlice";
+import { useParams } from "react-router-dom";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const Channel = () => {
+  const dispatch = useDispatch();
+  const param = useParams();
+  const [channelInfo, setChannelInfo] = useState({});
+
+  useEffect(() => {
+    getChannelInfo();
+  }, []);
+
   // Dummy Data
-  const channelInfo = {
-    banner: "https://via.placeholder.com/1920x400",
-    profilePic: "https://via.placeholder.com/150",
-    name: "Tech World",
-    subscribers: "1.2M subscribers",
-    description: "Tech tutorials, tips, and tricks to boost your skills!",
-  };
+  // const channelInfo = {
+  //   banner: "https://via.placeholder.com/1920x400",
+  //   profilePic: "https://via.placeholder.com/150",
+  //   name: "Tech World",
+  //   subscribers: "1.2M subscribers",
+  //   description: "Tech tutorials, tips, and tricks to boost your skills!",
+  // };
 
   const videos = [
     {
@@ -37,24 +49,43 @@ const Channel = () => {
     },
   ];
 
+  const getChannelInfo = () => {
+    dispatch(getChannelApi({ param: `/${param.id}` }))
+      .then(unwrapResult)
+      .then((res) => {
+        if (res.status) {
+          setChannelInfo(res.data);
+        } else {
+          setChannelInfo({});
+        }
+      });
+  };
+
   return (
     <div className="bg-black text-white">
       {/* Channel Banner */}
       <div className="relative">
         <img
           className="w-full h-64 object-cover"
-          src={channelInfo.banner}
+          src={"https://via.placeholder.com/1920x400"}
           alt="Channel Banner"
         />
         <div className="absolute bottom-4 left-4 flex items-center space-x-4">
           <img
-            className="w-24 h-24 rounded-full border-4 border-gray-800"
-            src={channelInfo.profilePic}
+            className="w-24 h-24 rounded-full border-4 border-gray-800 object-cover"
+            src={channelInfo.channelIcon}
             alt="Profile"
           />
           <div>
-            <h1 className="text-2xl font-bold">{channelInfo.name}</h1>
-            <p className="text-gray-400">{channelInfo.subscribers}</p>
+            <h1 className="text-3xl font-bold text-gray-700">
+              {channelInfo.name}
+            </h1>
+            <p className="text-lg font-bold text-gray-600">
+              {channelInfo.description}
+            </p>
+            <p className=" font-bold text-gray-500">
+              {channelInfo.subscribers} Subscribers
+            </p>
           </div>
         </div>
       </div>
