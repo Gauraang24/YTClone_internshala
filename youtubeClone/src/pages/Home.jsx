@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import VideoCard from "../components/CustomComponent/VideoCard";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { getAllVideosFunc } from "../store/slices/videoSlice";
+import { getAllVideosFunc, setFilter } from "../store/slices/videoSlice";
 
 // const sampleData = [
 //   {
@@ -73,7 +73,10 @@ const filter = [
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [activeTab, setActiveTab] = useState("all");
+  const selector = useSelector((state) => state.user);
+
+  console.log("selector ::", selector);
+  // const [activeTab, setActiveTab] = useState("all");
 
   const [videos, setVideos] = useState([]);
 
@@ -98,13 +101,17 @@ const Home = () => {
           return (
             <div
               className={`text-white py-1 px-4 ${
-                activeTab === i?.key
+                selector?.video?.filter === i?.key
                   ? "bg-slate-300 text-gray-800"
                   : "bg-gray-800"
               }  rounded-lg font-medium cursor-pointer`}
               key={i?.key}
               onClick={() => {
-                setActiveTab(i?.key);
+                dispatch(
+                  setFilter({
+                    filter: i?.key,
+                  })
+                );
               }}
             >
               {i?.label}

@@ -4,13 +4,18 @@ import { Avatar, Dropdown } from "antd";
 import { Input } from "antd";
 import CustomButton from "../CustomComponent/CustomButton";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NavModal from "./NavModal";
+import { getAllVideosFunc, setSearch } from "../../store/slices/videoSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const { Search } = Input;
 
 const Navbar = ({ collapsed, setCollapsed }) => {
+  const dispatch = useDispatch();
   const selector = useSelector((state) => state.user.user);
+  const search = useSelector((state) => state.user.video.searchValue);
+  const filter = useSelector((state) => state.user.video.filter);
   const [modal, setModal] = useState(false);
   const [modalKey, setModalKey] = useState("");
 
@@ -51,6 +56,35 @@ const Navbar = ({ collapsed, setCollapsed }) => {
     onClick: handleDropDown,
   };
 
+  const onSearch = async (event) => {
+    const { value } = event.target;
+
+    try {
+      await dispatch(
+        setSearch({
+          searchValue: value,
+        })
+      );
+
+      const query = {
+        searchQuery: value,
+        category: filter,
+      };
+
+      const response = await dispatch(getAllVideosFunc({ query })).then(
+        unwrapResult
+      );
+
+      if (response.status) {
+        console.log("res.data", response);
+      } else {
+        console.error("Failed to fetch videos");
+      }
+    } catch (error) {
+      console.error("Error during search:", error.message);
+    }
+  };
+
   return (
     <section className="flex items-center px-4  w-full">
       <div className="flex items-center  w-1/3">
@@ -72,7 +106,8 @@ const Navbar = ({ collapsed, setCollapsed }) => {
       <Search
         placeholder="input search text"
         className="header-searchBar w-1/3"
-        onSearch={() => {}}
+        onChange={onSearch}
+        value={search}
       />
 
       <div className="w-1/3 text-right">

@@ -3,7 +3,11 @@ import { GET_REQUEST } from "../httpHelper";
 import { api } from "../api.js";
 import { getAllVideos, getVideoById } from "../../utils/endpoints.js";
 
-const initialState = {};
+const initialState = {
+  searchValue: "",
+  filter: "",
+  videoList: [],
+};
 
 //API FUNCTIONS
 export const getAllVideosFunc = api("api/getVideos", GET_REQUEST, getAllVideos);
@@ -12,8 +16,18 @@ export const getVideosById = api("api/videosById", GET_REQUEST, getVideoById);
 const videoSlice = createSlice({
   name: "video",
   initialState,
-  reducers: {},
+  reducers: {
+    setSearch: (state, action) => {
+      state.searchValue = action.payload.searchValue;
+    },
+    setFilter: (state, action) => {
+      state.filter = action.payload.filter;
+    },
+    setVideoList: (state, action) => {
+      state.videoList = action.payload.videoList;
+    },
+  },
 });
 
-export const {} = videoSlice.actions;
+export const { setSearch, setFilter, setVideoList } = videoSlice.actions;
 export default videoSlice.reducer;

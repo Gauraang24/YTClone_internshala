@@ -14,7 +14,11 @@ import {
   ADD_COMMENT,
 } from "../../utils/endpoints.js";
 
-const initialState = {};
+const initialState = {
+  token: "",
+  userId: "",
+  channelId: "",
+};
 
 //Login-signup apis
 export const loginApi = api("user/login", POST_REQUEST, LOGIN);
@@ -48,13 +52,13 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setToken: (state, action) => {
-      state.token = action.payload?.token;
+      state.token = action.payload.token;
     },
     setUserId: (state, action) => {
-      state.userId = action.payload?.userId;
+      state.userId = action.payload.userId;
     },
     setChannelId: (state, action) => {
-      state.channelId = action.payload?.channelId;
+      state.channelId = action.payload.channelId;
     },
   },
 });
