@@ -26,8 +26,16 @@ const videoSlice = createSlice({
     setVideoList: (state, action) => {
       state.videoList = action.payload.videoList;
     },
+    resetVideoState: (state, action) => {
+      return (state = {
+        searchValue: "",
+        filter: "",
+        videoList: [],
+      });
+    },
   },
 });
 
-export const { setSearch, setFilter, setVideoList } = videoSlice.actions;
+export const { setSearch, setFilter, setVideoList, resetVideoState } =
+  videoSlice.actions;
 export default videoSlice.reducer;

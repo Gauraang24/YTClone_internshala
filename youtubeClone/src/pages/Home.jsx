@@ -93,7 +93,9 @@ const Home = () => {
       });
   };
   useEffect(() => {
-    getVideos();
+    if (selector.user.token) {
+      getVideos();
+    }
   }, []);
 
   const onFilterChange = async (event) => {
@@ -107,13 +109,15 @@ const Home = () => {
         searchQuery: search,
         category: event?.key === "all" ? "" : event?.key,
       };
-      const response = await dispatch(getAllVideosFunc({ query })).then(
-        unwrapResult
-      );
-      if (response.status) {
-        dispatch(setVideoList({ videoList: response.data }));
-      } else {
-        console.error("Failed to fetch videos");
+      if (selector.user.token) {
+        const response = await dispatch(getAllVideosFunc({ query })).then(
+          unwrapResult
+        );
+        if (response.status) {
+          dispatch(setVideoList({ videoList: response.data }));
+        } else {
+          console.error("Failed to fetch videos");
+        }
       }
     } catch (error) {
       console.error("Error during search:", error.message);

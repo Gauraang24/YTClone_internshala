@@ -8,10 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import NavModal from "./NavModal";
 import {
   getAllVideosFunc,
+  resetVideoState,
   setSearch,
   setVideoList,
 } from "../../store/slices/videoSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { resetUserState } from "../../store/slices/userSlice";
 
 const { Search } = Input;
 
@@ -33,6 +35,10 @@ const Navbar = ({ collapsed, setCollapsed }) => {
       key: "1",
       label: "Create Channel",
     },
+    {
+      key: "4",
+      label: "Logout",
+    },
   ];
 
   const items2 = [
@@ -44,6 +50,10 @@ const Navbar = ({ collapsed, setCollapsed }) => {
       key: "3",
       label: "Upload Videos",
     },
+    {
+      key: "4",
+      label: "Logout",
+    },
   ];
 
   const handleDropDown = (e) => {
@@ -52,6 +62,9 @@ const Navbar = ({ collapsed, setCollapsed }) => {
       setModalKey(e.key);
     } else if (e.key === "2") {
       navigate(`channel/${selector?.channelId}`);
+    } else if (e.key === "4") {
+      dispatch(resetUserState());
+      dispatch(resetVideoState());
     }
   };
 
@@ -72,17 +85,19 @@ const Navbar = ({ collapsed, setCollapsed }) => {
 
       const query = {
         searchQuery: value,
-        category: filter,
+        category: filter === "all" ? "" : filter,
       };
 
-      const response = await dispatch(getAllVideosFunc({ query })).then(
-        unwrapResult
-      );
+      if (selector.token) {
+        const response = await dispatch(getAllVideosFunc({ query })).then(
+          unwrapResult
+        );
 
-      if (response.status) {
-        dispatch(setVideoList({ videoList: response.data }));
-      } else {
-        console.error("Failed to fetch videos");
+        if (response.status) {
+          dispatch(setVideoList({ videoList: response.data }));
+        } else {
+          console.error("Failed to fetch videos");
+        }
       }
     } catch (error) {
       console.error("Error during search:", error.message);

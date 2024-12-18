@@ -60,8 +60,16 @@ const userSlice = createSlice({
     setChannelId: (state, action) => {
       state.channelId = action.payload.channelId;
     },
+    resetUserState: (state, action) => {
+      return (state = {
+        token: "",
+        userId: "",
+        channelId: "",
+      });
+    },
   },
 });
 
-export const { setToken, setUserId, setChannelId } = userSlice.actions;
+export const { setToken, setUserId, setChannelId, resetUserState } =
+  userSlice.actions;
 export default userSlice.reducer;

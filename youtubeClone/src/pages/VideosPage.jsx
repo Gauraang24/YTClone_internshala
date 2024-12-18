@@ -251,7 +251,7 @@ const VideosPage = () => {
           <div>
             <div className="flex items-center gap-4 mb-4">
               <Avatar
-                icon={"A"}
+                icon={videoData[0]?.channelName.split("")[0].slice(0, 1)}
                 style={{
                   backgroundColor: "#a8a8a8",
                   verticalAlign: "middle",
