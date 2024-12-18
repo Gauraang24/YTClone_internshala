@@ -9,6 +9,7 @@ import Channel from "./pages/Channel";
 import { useDispatch } from "react-redux";
 import { axiosInstance } from "./store/axiosInstance";
 import { useEffect } from "react";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const dispatch = useDispatch();
