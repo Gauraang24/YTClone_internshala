@@ -1,54 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getChannelApi } from "../store/slices/userSlice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { toastMessage } from "../utils/functions";
 
 const Channel = () => {
   const dispatch = useDispatch();
   const param = useParams();
   const [channelInfo, setChannelInfo] = useState({});
   const [videosData, setVideosData] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getChannelInfo();
   }, []);
-
-  // Dummy Data
-  // const channelInfo = {
-  //   banner: "https://via.placeholder.com/1920x400",
-  //   profilePic: "https://via.placeholder.com/150",
-  //   name: "Tech World",
-  //   subscribers: "1.2M subscribers",
-  //   description: "Tech tutorials, tips, and tricks to boost your skills!",
-  // };
-
-  const videos = [
-    {
-      id: 1,
-      title: "Learn React in 30 Minutes",
-      thumbnail: "https://via.placeholder.com/300",
-      views: "1M views",
-    },
-    {
-      id: 2,
-      title: "JavaScript Tips & Tricks",
-      thumbnail: "https://via.placeholder.com/300",
-      views: "800K views",
-    },
-    {
-      id: 3,
-      title: "CSS Grid vs Flexbox",
-      thumbnail: "https://via.placeholder.com/300",
-      views: "500K views",
-    },
-    {
-      id: 4,
-      title: "Mastering Redux",
-      thumbnail: "https://via.placeholder.com/300",
-      views: "400K views",
-    },
-  ];
 
   const getChannelInfo = () => {
     dispatch(getChannelApi({ param: `/${param.id}` }))
@@ -57,7 +23,9 @@ const Channel = () => {
         if (res.status) {
           setChannelInfo(res.data?.channelInfo);
           setVideosData(res?.data?.videosData);
+          toastMessage(res?.message, "", true);
         } else {
+          toastMessage(res?.message, "error", true);
           setChannelInfo({});
         }
       });
@@ -115,7 +83,10 @@ const Channel = () => {
         {videosData.map((video) => (
           <div
             key={video?._id}
-            className="bg-[#FFFFFF1A] p-2 rounded-lg hover:bg-[#FFFFFF2A]"
+            className="bg-[#FFFFFF1A] p-2 rounded-lg hover:bg-[#FFFFFF2A] cursor-pointer"
+            onClick={() => {
+              navigate(`/videos/${video?._id}`);
+            }}
           >
             <img
               className="w-full h-40 object-cover rounded-md"
