@@ -6,7 +6,11 @@ import CustomButton from "../CustomComponent/CustomButton";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import NavModal from "./NavModal";
-import { getAllVideosFunc, setSearch } from "../../store/slices/videoSlice";
+import {
+  getAllVideosFunc,
+  setSearch,
+  setVideoList,
+} from "../../store/slices/videoSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 
 const { Search } = Input;
@@ -76,7 +80,7 @@ const Navbar = ({ collapsed, setCollapsed }) => {
       );
 
       if (response.status) {
-        console.log("res.data", response);
+        dispatch(setVideoList({ videoList: response.data }));
       } else {
         console.error("Failed to fetch videos");
       }

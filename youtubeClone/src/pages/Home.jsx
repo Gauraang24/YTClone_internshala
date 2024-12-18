@@ -3,7 +3,11 @@ import VideoCard from "../components/CustomComponent/VideoCard";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { getAllVideosFunc, setFilter } from "../store/slices/videoSlice";
+import {
+  getAllVideosFunc,
+  setFilter,
+  setVideoList,
+} from "../store/slices/videoSlice";
 
 // const sampleData = [
 //   {
@@ -59,33 +63,30 @@ const filter = [
   },
   {
     label: "Javascript",
-    key: "javaScript",
+    key: "JavaScript",
   },
   {
     label: "Music",
-    key: "music",
+    key: "Music",
   },
   {
     label: "Podcast",
-    key: "podcasts",
+    key: "Podcast",
   },
 ];
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const selector = useSelector((state) => state.user);
-
-  console.log("selector ::", selector);
-  // const [activeTab, setActiveTab] = useState("all");
-
-  const [videos, setVideos] = useState([]);
+  const search = useSelector((state) => state.user.video.searchValue);
+  const filterSelector = useSelector((state) => state.user.video.filter);
 
   const getVideos = () => {
     dispatch(getAllVideosFunc())
       .then(unwrapResult)
       .then((res) => {
         if (res.status) {
-          setVideos(res.data);
+          dispatch(setVideoList({ videoList: res.data }));
         } else {
           console.log("some error occured");
         }
@@ -94,6 +95,30 @@ const Home = () => {
   useEffect(() => {
     getVideos();
   }, []);
+
+  const onFilterChange = async (event) => {
+    try {
+      await dispatch(
+        setFilter({
+          filter: event?.key,
+        })
+      );
+      const query = {
+        searchQuery: search,
+        category: event?.key === "all" ? "" : event?.key,
+      };
+      const response = await dispatch(getAllVideosFunc({ query })).then(
+        unwrapResult
+      );
+      if (response.status) {
+        dispatch(setVideoList({ videoList: response.data }));
+      } else {
+        console.error("Failed to fetch videos");
+      }
+    } catch (error) {
+      console.error("Error during search:", error.message);
+    }
+  };
   return (
     <div className="ml-4">
       <div className="flex gap-4 mb-8">
@@ -106,13 +131,7 @@ const Home = () => {
                   : "bg-gray-800"
               }  rounded-lg font-medium cursor-pointer`}
               key={i?.key}
-              onClick={() => {
-                dispatch(
-                  setFilter({
-                    filter: i?.key,
-                  })
-                );
-              }}
+              onClick={() => onFilterChange(i)}
             >
               {i?.label}
             </div>
@@ -120,7 +139,7 @@ const Home = () => {
         })}
       </div>
       <div className="text-white grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-4 justify-center">
-        {videos.map((i) => {
+        {selector?.video?.videoList.map((i) => {
           return (
             <div
               key={i?.videoId}
