@@ -1,15 +1,20 @@
-import { Avatar } from "antd";
+import { Avatar, Dropdown } from "antd";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CustomButton from "../components/CustomComponent/CustomButton";
-import { DislikeOutlined, LikeOutlined } from "@ant-design/icons";
+import { DislikeOutlined, LikeOutlined, MoreOutlined } from "@ant-design/icons";
 import CustomInput from "../components/CustomComponent/CustomInput";
 import { getVideosById } from "../store/slices/videoSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Controller, useForm } from "react-hook-form";
-import { addCommentApi } from "../store/slices/userSlice";
+import {
+  addCommentApi,
+  deleteCommentApi,
+  editCommentApi,
+} from "../store/slices/userSlice";
 import { formatDistanceToNow } from "date-fns";
+import CustomModal from "../components/CustomComponent/CustomModal";
 
 const VideosPage = () => {
   const param = useParams();
@@ -17,6 +22,8 @@ const VideosPage = () => {
   const userId = useSelector((state) => state.user.user.userId);
   const [videoData, setVideoData] = useState([]);
   const [commentData, setCommentData] = useState([]);
+  const [activeComment, setActiveComment] = useState("");
+  const [open, setOpen] = useState(false);
 
   const formatRelativeTime = (dateString) => {
     return formatDistanceToNow(new Date(dateString), { addSuffix: true });
@@ -27,12 +34,10 @@ const VideosPage = () => {
     control,
     formState: { errors },
     getValues,
+    reset,
   } = useForm({
     mode: "onChange",
     reValidateMode: "onChange",
-    defaultValues: {
-      comment: "",
-    },
   });
 
   useEffect(() => {
@@ -41,23 +46,67 @@ const VideosPage = () => {
 
   const onSubmit = (values) => {
     const data = {
-      comment: values.comment,
+      comment: values?.comment,
       videoId: param.id,
       userId: userId,
     };
 
-    dispatch(
-      addCommentApi({
-        data: data,
-      })
-    )
+    if (values?.comment !== "" && values?.comment !== undefined) {
+      dispatch(
+        addCommentApi({
+          data: data,
+        })
+      )
+        .then(unwrapResult)
+        .then((res) => {
+          if (res.status) {
+            getVideosData();
+            reset({});
+          } else {
+            console.log("some error occurred", res.message);
+          }
+        });
+    }
+  };
+
+  const editSubmit = (values) => {
+    const data = {
+      comment: values?.editComment,
+    };
+
+    if (values?.editComment !== "" && values?.editComment !== undefined) {
+      dispatch(
+        editCommentApi({
+          data: data,
+          param: `/${activeComment}`,
+        })
+      )
+        .then(unwrapResult)
+        .then((res) => {
+          if (res.status) {
+            console.log("Comment added");
+            getVideosData();
+            reset({});
+            setActiveComment("");
+          } else {
+            console.log("some error occurred", res.message);
+          }
+        });
+    }
+  };
+
+  const deleteComment = () => {
+    dispatch(deleteCommentApi({ param: `/${activeComment}` }))
       .then(unwrapResult)
       .then((res) => {
         if (res.status) {
-          console.log("Comment added");
           getVideosData();
+          reset({});
+          setActiveComment("");
+          setOpen(false);
         } else {
-          console.log("some error occurred", res.message);
+          setOpen(false);
+          console.log("Some Error Occurred", res.message);
         }
       });
   };
@@ -133,8 +182,17 @@ const VideosPage = () => {
     },
   ];
 
+  const handleDropDown = (e, comment) => {
+    if (e.key === "1") {
+      setActiveComment(comment._id);
+    } else if (e.key === "2") {
+      setActiveComment(comment._id);
+      setOpen(true);
+    }
+  };
+
   return (
-    <div className="text-white flex flex-col md:flex-row bg-black h-full">
+    <section className="text-white flex flex-col md:flex-row bg-black h-full">
       {/* Left Section */}
       <div className="flex-1 flex flex-col p-4 space-y-4">
         {/* Video Player */}
@@ -208,9 +266,6 @@ const VideosPage = () => {
                 <Controller
                   control={control}
                   name="comment"
-                  rules={{
-                    required: "Comment is required",
-                  }}
                   render={({ field: { onChange } }) => {
                     return (
                       <>
@@ -224,6 +279,7 @@ const VideosPage = () => {
                           onChange={(e) => {
                             onChange(e.target.value);
                           }}
+                          errors={errors?.comment?.message}
                         />
                       </>
                     );
@@ -237,16 +293,85 @@ const VideosPage = () => {
             </div>
           </div>
           <div className="space-y-4">
-            {commentData.map((comment) => (
-              <div key={comment.id} className="bg-[#FFFFFF1A] p-3 rounded-md">
-                <p className="font-bold">{comment.userId?.name}</p>
-                <p className="text-sm text-gray-400">
-                  {formatRelativeTime(comment.createdAt)}
-                </p>
+            {commentData.map((comment) => {
+              return (
+                <div
+                  key={comment.id}
+                  className="bg-[#FFFFFF1A] p-3 rounded-md flex justify-between items-center"
+                >
+                  <div className="flex-1">
+                    <p className="font-bold">{comment.userId?.name}</p>
+                    <p className="text-sm text-gray-400">
+                      {formatRelativeTime(comment.createdAt)}
+                    </p>
 
-                <p>{comment?.comment}</p>
-              </div>
-            ))}
+                    <p>
+                      {activeComment == comment?._id ? (
+                        <div className="flex gap-6 mt-4 w-full justify-between items-center">
+                          <div className="flex-1">
+                            <Controller
+                              control={control}
+                              name="editComment"
+                              render={({ field: { onChange } }) => {
+                                return (
+                                  <>
+                                    <CustomInput
+                                      className={
+                                        "mt-2 placeholder:text-white border-t-0 border-x-0 rounded-none w-full flex-1"
+                                      }
+                                      id={"editComment"}
+                                      value={getValues("editComment")}
+                                      placeholder="Add a comment..."
+                                      onChange={(e) => {
+                                        onChange(e.target.value);
+                                      }}
+                                      errors={errors?.editComment?.message}
+                                    />
+                                  </>
+                                );
+                              }}
+                            />
+                          </div>
+                          <div className="">
+                            <CustomButton
+                              className={""}
+                              title={"Update"}
+                              onClick={handleSubmit(editSubmit)}
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        comment?.comment
+                      )}
+                    </p>
+                  </div>
+
+                  {userId === comment.userId._id && (
+                    <>
+                      <Dropdown
+                        menu={{
+                          items: [
+                            {
+                              key: "1",
+                              label: "Edit",
+                            },
+                            {
+                              key: "2",
+                              label: "Delete",
+                            },
+                          ],
+                          onClick: (e) => {
+                            handleDropDown(e, comment);
+                          },
+                        }}
+                      >
+                        <MoreOutlined />
+                      </Dropdown>
+                    </>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -273,7 +398,41 @@ const VideosPage = () => {
           ))}
         </div>
       </div>
-    </div>
+
+      <CustomModal
+        open={open}
+        onCancel={() => {
+          setOpen(false);
+        }}
+        footer={<></>}
+      >
+        <div>
+          <p className="text-white">Are you sure you want to delete comment?</p>
+          <div className="flex gap-4">
+            <div className="w-1/2">
+              <CustomButton
+                title={"No"}
+                color=""
+                variant=""
+                className={"my-2 w-full"}
+                onClick={() => {
+                  setOpen(false);
+                }}
+              />
+            </div>
+            <div className="w-1/2">
+              <CustomButton
+                title={"Yess"}
+                color="danger"
+                variant="solid"
+                className={"my-2 w-full"}
+                onClick={handleSubmit(deleteComment)}
+              />
+            </div>
+          </div>
+        </div>
+      </CustomModal>
+    </section>
   );
 };
 

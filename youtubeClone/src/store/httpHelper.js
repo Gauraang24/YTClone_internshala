@@ -26,3 +26,12 @@ export const PUT_REQUEST = async (url, data) => {
     console.log("Error in PUT REQUEST", error);
   }
 };
+
+export const DELETE_REQUEST = async (url, data) => {
+  try {
+    const response = await axiosInstance.delete(url, data);
+    return response?.data;
+  } catch (error) {
+    console.log("Error in DELETE REQUEST", error);
+  }
+};

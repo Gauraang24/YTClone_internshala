@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { GET_REQUEST, POST_REQUEST } from "../httpHelper";
+import {
+  DELETE_REQUEST,
+  GET_REQUEST,
+  POST_REQUEST,
+  PUT_REQUEST,
+} from "../httpHelper";
 import { api } from "../api.js";
 import {
   LOGIN,
@@ -29,6 +34,14 @@ export const getChannelApi = api(
 
 //Comment Apis
 export const addCommentApi = api("user/addComments", POST_REQUEST, ADD_COMMENT);
+
+export const editCommentApi = api("user/editComment", PUT_REQUEST, ADD_COMMENT);
+
+export const deleteCommentApi = api(
+  "user/deleteComment",
+  DELETE_REQUEST,
+  ADD_COMMENT
+);
 
 const userSlice = createSlice({
   name: "user",
