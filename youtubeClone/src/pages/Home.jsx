@@ -148,7 +148,9 @@ const Home = () => {
               }}
             >
               <VideoCard
-                imgLink={i?.thumbnailUrl}
+                imgLink={
+                  "https://pngimg.com/uploads/youtube/youtube_PNG102349.png"
+                }
                 title={i?.title}
                 channelName={i?.channelName}
                 views={i?.views}
