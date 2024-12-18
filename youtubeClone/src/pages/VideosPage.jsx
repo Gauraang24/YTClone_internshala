@@ -15,6 +15,7 @@ import {
 } from "../store/slices/userSlice";
 import { formatDistanceToNow } from "date-fns";
 import CustomModal from "../components/CustomComponent/CustomModal";
+import { toastMessage } from "../utils/functions";
 
 const VideosPage = () => {
   const param = useParams();
@@ -61,9 +62,11 @@ const VideosPage = () => {
         .then(unwrapResult)
         .then((res) => {
           if (res.status) {
+            toastMessage(res?.message, "", true);
             getVideosData();
             reset({});
           } else {
+            toastMessage(res?.message, "error", true);
             console.log("some error occurred", res.message);
           }
         });
@@ -85,12 +88,12 @@ const VideosPage = () => {
         .then(unwrapResult)
         .then((res) => {
           if (res.status) {
-            console.log("Comment added");
             getVideosData();
             reset({});
             setActiveComment("");
+            toastMessage(res?.message, "", true);
           } else {
-            console.log("some error occurred", res.message);
+            toastMessage(res?.message, "error", true);
           }
         });
     }
@@ -105,7 +108,9 @@ const VideosPage = () => {
           reset({});
           setActiveComment("");
           setOpen(false);
+          toastMessage(res?.message, "", true);
         } else {
+          toastMessage(res?.message, "error", true);
           setOpen(false);
           console.log("Some Error Occurred", res.message);
         }
@@ -123,7 +128,10 @@ const VideosPage = () => {
         if (res.status) {
           setVideoData([res?.data?.video]);
           setCommentData(res?.data?.comments);
+
+          // toastMessage(res?.message, "", true);
         } else {
+          // toastMessage(res?.message, "error", true);
           setVideoData({});
         }
       });

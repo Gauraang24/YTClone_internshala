@@ -14,6 +14,7 @@ import {
 } from "../../store/slices/videoSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { resetUserState } from "../../store/slices/userSlice";
+import { toastMessage } from "../../utils/functions";
 
 const { Search } = Input;
 
@@ -95,7 +96,9 @@ const Navbar = ({ collapsed, setCollapsed }) => {
 
         if (response.status) {
           dispatch(setVideoList({ videoList: response.data }));
+          toastMessage(response?.message, "", true);
         } else {
+          toastMessage(response?.message, "error", true);
           console.error("Failed to fetch videos");
         }
       }

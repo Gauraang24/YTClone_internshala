@@ -8,6 +8,7 @@ import {
   setFilter,
   setVideoList,
 } from "../store/slices/videoSlice";
+import { toastMessage } from "../utils/functions";
 
 // const sampleData = [
 //   {
@@ -87,8 +88,10 @@ const Home = () => {
       .then((res) => {
         if (res.status) {
           dispatch(setVideoList({ videoList: res.data }));
+          console.log("res", res);
+          toastMessage(res?.message, "", true);
         } else {
-          console.log("some error occured");
+          toastMessage(res?.message, "error", true);
         }
       });
   };
@@ -114,8 +117,10 @@ const Home = () => {
           unwrapResult
         );
         if (response.status) {
+          toastMessage(response?.message, "", true);
           dispatch(setVideoList({ videoList: response.data }));
         } else {
+          toastMessage(response?.message, "", true);
           console.error("Failed to fetch videos");
         }
       }

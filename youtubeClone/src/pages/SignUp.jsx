@@ -95,7 +95,9 @@ const SignUp = () => {
         .then((res) => {
           if (res.status) {
             navigate("/login");
+            toastMessage(res?.message, "", true);
           } else {
+            toastMessage(res?.message, "error", true);
             console.log("Some Error occured", res);
           }
         });

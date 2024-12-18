@@ -12,6 +12,7 @@ import {
   setUserId,
 } from "../store/slices/userSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { toastMessage } from "../utils/functions";
 
 const fields = [
   {
@@ -67,8 +68,11 @@ const LogIn = () => {
           if (res?.data?.channelId) {
             dispatch(setChannelId({ channelId: res?.data?.channelId }));
           }
+
+          toastMessage(res?.message, "", true);
           navigate("/");
         } else {
+          toastMessage(res?.message, "error", true);
           console.log("Some error occured", res.message);
         }
       });

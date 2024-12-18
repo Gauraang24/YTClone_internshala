@@ -2,7 +2,7 @@ import { Input, Upload } from "antd";
 import React, { useEffect, useState } from "react";
 import CustomModal from "../CustomComponent/CustomModal";
 import { PlusOutlined } from "@ant-design/icons";
-import { getBase64 } from "../../utils/functions";
+import { getBase64, toastMessage } from "../../utils/functions";
 import CustomInput from "../CustomComponent/CustomInput";
 import { Controller, useForm } from "react-hook-form";
 import CustomButton from "../CustomComponent/CustomButton";
@@ -87,7 +87,9 @@ const NavModal = ({ modalKey, modal, setModal }) => {
         if (result.status) {
           dispatch(setChannelId({ channelId: result?.data?._id }));
           setModal(false);
+          toastMessage(result?.message, "", true);
         } else {
+          toastMessage(result?.message, "error", true);
           setModal(false);
           console.log("Some Error Occured");
         }
