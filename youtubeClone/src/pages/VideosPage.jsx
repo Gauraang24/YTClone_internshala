@@ -5,18 +5,62 @@ import CustomButton from "../components/CustomComponent/CustomButton";
 import { DislikeOutlined, LikeOutlined } from "@ant-design/icons";
 import CustomInput from "../components/CustomComponent/CustomInput";
 import { getVideosById } from "../store/slices/videoSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { Controller, useForm } from "react-hook-form";
+import { addCommentApi } from "../store/slices/userSlice";
+import { formatDistanceToNow } from "date-fns";
 
 const VideosPage = () => {
   const param = useParams();
   const dispatch = useDispatch();
+  const userId = useSelector((state) => state.user.user.userId);
   const [videoData, setVideoData] = useState([]);
   const [commentData, setCommentData] = useState([]);
+
+  const formatRelativeTime = (dateString) => {
+    return formatDistanceToNow(new Date(dateString), { addSuffix: true });
+  };
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    getValues,
+  } = useForm({
+    mode: "onChange",
+    reValidateMode: "onChange",
+    defaultValues: {
+      comment: "",
+    },
+  });
 
   useEffect(() => {
     getVideosData();
   }, []);
+
+  const onSubmit = (values) => {
+    const data = {
+      comment: values.comment,
+      videoId: param.id,
+      userId: userId,
+    };
+
+    dispatch(
+      addCommentApi({
+        data: data,
+      })
+    )
+      .then(unwrapResult)
+      .then((res) => {
+        if (res.status) {
+          console.log("Comment added");
+          getVideosData();
+        } else {
+          console.log("some error occurred", res.message);
+        }
+      });
+  };
 
   const getVideosData = () => {
     dispatch(
@@ -161,23 +205,46 @@ const VideosPage = () => {
                 }}
               />
               <div className="mx-4 flex-1">
-                <CustomInput
-                  className={
-                    "mt-2 placeholder:text-white border-t-0 border-x-0 rounded-none w-full flex-1"
-                  }
-                  id={"comment"}
-                  placeholder="Add a comment..."
+                <Controller
+                  control={control}
+                  name="comment"
+                  rules={{
+                    required: "Comment is required",
+                  }}
+                  render={({ field: { onChange } }) => {
+                    return (
+                      <>
+                        <CustomInput
+                          className={
+                            "mt-2 placeholder:text-white border-t-0 border-x-0 rounded-none w-full flex-1"
+                          }
+                          id={"comment"}
+                          value={getValues("comment")}
+                          placeholder="Add a comment..."
+                          onChange={(e) => {
+                            onChange(e.target.value);
+                          }}
+                        />
+                      </>
+                    );
+                  }}
                 />
               </div>
-              <CustomButton title={"Comment"} />
+              <CustomButton
+                title={"Comment"}
+                onClick={handleSubmit(onSubmit)}
+              />
             </div>
           </div>
           <div className="space-y-4">
-            {comments.map((comment) => (
+            {commentData.map((comment) => (
               <div key={comment.id} className="bg-[#FFFFFF1A] p-3 rounded-md">
-                <p className="font-bold">{comment.name}</p>
-                <p className="text-sm text-gray-400">{comment.timestamp}</p>
-                <p>{comment.text}</p>
+                <p className="font-bold">{comment.userId?.name}</p>
+                <p className="text-sm text-gray-400">
+                  {formatRelativeTime(comment.createdAt)}
+                </p>
+
+                <p>{comment?.comment}</p>
               </div>
             ))}
           </div>
