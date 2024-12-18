@@ -1,6 +1,6 @@
 import { Avatar, Dropdown } from "antd";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CustomButton from "../components/CustomComponent/CustomButton";
 import { DislikeOutlined, LikeOutlined, MoreOutlined } from "@ant-design/icons";
 import CustomInput from "../components/CustomComponent/CustomInput";
@@ -19,6 +19,7 @@ import CustomModal from "../components/CustomComponent/CustomModal";
 const VideosPage = () => {
   const param = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userId = useSelector((state) => state.user.user.userId);
   const [videoData, setVideoData] = useState([]);
   const [commentData, setCommentData] = useState([]);
@@ -218,9 +219,20 @@ const VideosPage = () => {
                       backgroundColor: "#a8a8a8",
                       verticalAlign: "middle",
                     }}
+                    className="cursor-pointer"
+                    onClick={() => {
+                      navigate(`/channel/${i?.channelId}`);
+                    }}
                   />
                   <div>
-                    <p>{i?.channelName}</p>
+                    <p
+                      className="cursor-pointer"
+                      onClick={() => {
+                        navigate(`/channel/${i?.channelId}`);
+                      }}
+                    >
+                      {i?.channelName}
+                    </p>
                     <p>{i?.subscribers || 0} Subscribers</p>
                   </div>
                   <CustomButton

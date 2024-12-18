@@ -8,6 +8,7 @@ const Channel = () => {
   const dispatch = useDispatch();
   const param = useParams();
   const [channelInfo, setChannelInfo] = useState({});
+  const [videosData, setVideosData] = useState([]);
 
   useEffect(() => {
     getChannelInfo();
@@ -54,7 +55,8 @@ const Channel = () => {
       .then(unwrapResult)
       .then((res) => {
         if (res.status) {
-          setChannelInfo(res.data);
+          setChannelInfo(res.data?.channelInfo);
+          setVideosData(res?.data?.videosData);
         } else {
           setChannelInfo({});
         }
@@ -110,19 +112,19 @@ const Channel = () => {
 
       {/* Video Grid */}
       <div className="px-6 py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {videos.map((video) => (
+        {videosData.map((video) => (
           <div
-            key={video.id}
+            key={video?._id}
             className="bg-[#FFFFFF1A] p-2 rounded-lg hover:bg-[#FFFFFF2A]"
           >
             <img
               className="w-full h-40 object-cover rounded-md"
-              src={video.thumbnail}
-              alt={video.title}
+              src={video?.thumbnailUrl}
+              alt={video?.title}
             />
             <div className="mt-2">
-              <h2 className="text-lg font-semibold truncate">{video.title}</h2>
-              <p className="text-sm text-gray-400">{video.views}</p>
+              <h2 className="text-lg font-semibold truncate">{video?.title}</h2>
+              <p className="text-sm text-gray-400">{video?.views} Views</p>
             </div>
           </div>
         ))}
