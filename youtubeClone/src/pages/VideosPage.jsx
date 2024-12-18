@@ -156,33 +156,6 @@ const VideosPage = () => {
     },
   ];
 
-  const comments = [
-    {
-      id: 1,
-      name: "John Doe",
-      text: "This video was super helpful!",
-      timestamp: "2 hours ago",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      text: "Great explanation, thanks!",
-      timestamp: "1 day ago",
-    },
-    {
-      id: 3,
-      name: "Coder123",
-      text: "Loved the part about hooks.",
-      timestamp: "3 days ago",
-    },
-    {
-      id: 4,
-      name: "Coder123",
-      text: "Loved the part about hooks.",
-      timestamp: "3 days ago",
-    },
-  ];
-
   const handleDropDown = (e, comment) => {
     if (e.key === "1") {
       setActiveComment(comment._id);
@@ -233,7 +206,9 @@ const VideosPage = () => {
                     >
                       {i?.channelName}
                     </p>
-                    <p>{i?.subscribers || 0} Subscribers</p>
+                    <p className="font-medium text-sm text-gray-500">
+                      {i?.subscribers || 0} Subscribers
+                    </p>
                   </div>
                   <CustomButton
                     title={"Subscribe"}
@@ -246,16 +221,24 @@ const VideosPage = () => {
                       <LikeOutlined />
                       {/* <DislikeFilled /> */}
                     </p>
-                    <p>{i?.likes}</p>
+                    <p className="font-medium text-sm text-gray-500">
+                      {i?.likes}
+                    </p>
                   </div>
                   <div className="flex flex-col items-center">
                     <p>
                       <DislikeOutlined />
                       {/* <LikeFilled /> */}
                     </p>
-                    <p>{i?.dislikes}</p>
+                    <p className="font-medium text-sm text-gray-500">
+                      {i?.dislikes}
+                    </p>
                   </div>
                 </div>
+              </div>
+              <div className="py-6">
+                <p className="font-medium text-sm text-gray-500">DESCRIPTION</p>
+                <p className="font-medium text-xl">{i?.description}</p>
               </div>
             </>
           );
@@ -263,7 +246,7 @@ const VideosPage = () => {
 
         {/* Comment Section */}
         <div className=" pr-4 rounded-lg flex-1">
-          <h2 className="text-xl font-semibold mb-4">Comments</h2>
+          <h2 className="mb-4 font-medium text-sm text-gray-500">Comments</h2>
 
           <div>
             <div className="flex items-center gap-4 mb-4">
@@ -312,8 +295,10 @@ const VideosPage = () => {
                   className="bg-[#FFFFFF1A] p-3 rounded-md flex justify-between items-center"
                 >
                   <div className="flex-1">
-                    <p className="font-bold">{comment.userId?.name}</p>
-                    <p className="text-sm text-gray-400">
+                    <p className="font-medium text-md text-gray-400">
+                      {comment.userId?.name}
+                    </p>
+                    <p className="text-sm text-gray-600">
                       {formatRelativeTime(comment.createdAt)}
                     </p>
 
@@ -353,7 +338,9 @@ const VideosPage = () => {
                           </div>
                         </div>
                       ) : (
-                        comment?.comment
+                        <p className="font-medium text-xl">
+                          {comment?.comment}
+                        </p>
                       )}
                     </p>
                   </div>
