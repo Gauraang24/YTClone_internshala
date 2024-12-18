@@ -11,7 +11,8 @@ import { unwrapResult } from "@reduxjs/toolkit";
 const VideosPage = () => {
   const param = useParams();
   const dispatch = useDispatch();
-  const [videoData, setVideoData] = useState({});
+  const [videoData, setVideoData] = useState([]);
+  const [commentData, setCommentData] = useState([]);
 
   useEffect(() => {
     getVideosData();
@@ -26,7 +27,8 @@ const VideosPage = () => {
       .then(unwrapResult)
       .then((res) => {
         if (res.status) {
-          setVideoData(res.data);
+          setVideoData([res?.data?.video]);
+          setCommentData(res?.data?.comments);
         } else {
           setVideoData({});
         }
@@ -92,52 +94,58 @@ const VideosPage = () => {
       {/* Left Section */}
       <div className="flex-1 flex flex-col p-4 space-y-4">
         {/* Video Player */}
-        <div className="w-full flex items-center justify-center">
-          <iframe
-            className="w-full h-full rounded-lg aspect-video"
-            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-            title="Video Player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
-        <p>React JS roadmap | chai aur react series</p>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Avatar
-              icon={"A"}
-              style={{
-                backgroundColor: "#a8a8a8",
-                verticalAlign: "middle",
-              }}
-            />
-            <div>
-              <p>Channel Name</p>
-              <p>400K Subscribers</p>
-            </div>
-            <CustomButton
-              title={"Subscribe"}
-              className={"rounded-full font-bold"}
-            />
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex flex-col items-center">
-              <p>
-                <LikeOutlined />
-                {/* <DislikeFilled /> */}
-              </p>
-              <p>101</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p>
-                <DislikeOutlined />
-                {/* <LikeFilled /> */}
-              </p>
-              <p>101</p>
-            </div>
-          </div>
-        </div>
+        {videoData.map((i) => {
+          return (
+            <>
+              <div className="w-full flex items-center justify-center">
+                <iframe
+                  className="w-full h-full rounded-lg aspect-video"
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                  title="Video Player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+              <p>{i?.title}</p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <Avatar
+                    icon={i?.channelName.split("")[0].slice(0, 1)}
+                    style={{
+                      backgroundColor: "#a8a8a8",
+                      verticalAlign: "middle",
+                    }}
+                  />
+                  <div>
+                    <p>{i?.channelName}</p>
+                    <p>{i?.subscribers || 0} Subscribers</p>
+                  </div>
+                  <CustomButton
+                    title={"Subscribe"}
+                    className={"rounded-full font-bold"}
+                  />
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="flex flex-col items-center">
+                    <p>
+                      <LikeOutlined />
+                      {/* <DislikeFilled /> */}
+                    </p>
+                    <p>{i?.likes}</p>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <p>
+                      <DislikeOutlined />
+                      {/* <LikeFilled /> */}
+                    </p>
+                    <p>{i?.dislikes}</p>
+                  </div>
+                </div>
+              </div>
+            </>
+          );
+        })}
 
         {/* Comment Section */}
         <div className=" pr-4 rounded-lg flex-1">
